@@ -1,5 +1,5 @@
 {
-  "name": "freedsx/socket",
+  "name": "cymapgt/socket",
   "description": "A simple socket library for FreeDSx",
   "homepage": "https://github.com/FreeDSx/Socket",
   "keywords": [
@@ -15,8 +15,8 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
-    "freedsx/asn1": "^0.1.0"
+    "php": ">=7.0",
+    "cymapgt/asn1": "^0.1.0"
   },
   "require-dev": {
     "phpspec/phpspec": "^4.0"
