@@ -15,13 +15,19 @@
     }
   ],
   "require": {
+    "php": ">=7.1",
+    "freedsx/asn1": "^0.1.0"
     "php": ">=7.0",
     "cymapgt/asn1": "^0.2.1"
   },
   "require-dev": {
+    "phpspec/phpspec": "^4.0",
+    "freedsx/asn1": "^0.1.0"
     "phpspec/phpspec": "^4.0"
   },
   "suggest": {
+    "ext-openssl": "For SSL/TLS support.",
+    "freedsx/asn1": "For ASN.1 based message queues."
     "ext-openssl": "For SSL/TLS support."
   },
   "config": {

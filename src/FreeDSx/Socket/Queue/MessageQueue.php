@@ -8,20 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace FreeDSx\Socket;
+namespace FreeDSx\Socket\Queue;
 
-use FreeDSx\Asn1\Exception\PartialPduException;
-use FreeDSx\Asn1\Exception\EncoderException;
-use FreeDSx\Asn1\Type\AbstractType;
-use FreeDSx\Asn1\Encoder\EncoderInterface;
 use FreeDSx\Socket\Exception\ConnectionException;
+use FreeDSx\Socket\Exception\PartialMessageException;
+use FreeDSx\Socket\Socket;
 
 /**
- * Used to retrieve PDUs from the socket.
+ * Used to retrieve Messages/PDUs from a socket.
  *
  * @author Chad Sikorra <Chad.Sikorra@gmail.com>
  */
-class MessageQueue
+abstract class MessageQueue
 {
     /**
      * @var Socket
@@ -29,46 +27,22 @@ class MessageQueue
     protected $socket;
 
     /**
-     * @var EncoderInterface
-     */
-    protected $encoder;
-
-    /**
      * @var false|string
      */
     protected $buffer = false;
 
     /**
-     * @var string|null
-     */
-    protected $pduClass;
-
-    /**
      * @param Socket $socket
-     * @param EncoderInterface $encoder
-     * @param null|string $pduClass
      */
-    public function __construct(Socket $socket, EncoderInterface $encoder, ?string $pduClass = null)
+    public function __construct(Socket $socket)
     {
         $this->socket = $socket;
-        $this->encoder = $encoder;
-
-        if ($pduClass !== null && !is_subclass_of($pduClass, PduInterface::class)) {
-            throw new \RuntimeException(sprintf(
-                'The class "%s" must implement "%s", but it does not.',
-                $pduClass,
-                PduInterface::class
-            ));
-        }
-
-        $this->pduClass = $pduClass;
     }
 
     /**
      * @param int|null $id
      * @return \Generator
      * @throws ConnectionException
-     * @throws \FreeDSx\Asn1\Exception\EncoderException
      */
     public function getMessages(?int $id = null)
     {
@@ -84,31 +58,40 @@ class MessageQueue
         }
 
         while ($this->buffer !== false) {
-            $type = null;
+            $message = null;
             try {
-                $type = $this->encoder->decode($this->buffer);
+                $message = $this->decode($this->buffer);
                 $this->buffer = false;
 
-                if ($type->getTrailingData() != '') {
-                    $this->buffer = $type->getTrailingData();
+                if ($message->getTrailingData() != '') {
+                    $this->buffer = $message->getTrailingData();
                 } elseif (($peek = $this->socket->read(false)) !== false) {
                     $this->buffer .= $peek;
                 }
-            } catch (PartialPduException $e) {
+            } catch (PartialMessageException $e) {
                 $this->buffer .= $this->socket->read();
             }
 
-            if ($type !== null) {
-                yield $this->getPdu($type, $id);
+            if ($message !== null) {
+                yield $this->constructMessage($message, $id);
             }
         }
     }
 
     /**
+     * Decode the bytes to an object. If you have a partial object, throw the PartialMessageException and the queue
+     * will attempt to append more data to the buffer.
+     *
+     * @param $bytes
+     * @return mixed
+     * @throws PartialMessageException
+     */
+    protected abstract function decode($bytes) : Message;
+
+    /**
      * @param int|null $id
      * @return mixed
      * @throws ConnectionException
-     * @throws EncoderException
      */
     public function getMessage(?int $id = null)
     {
@@ -116,18 +99,14 @@ class MessageQueue
     }
 
     /**
-     * Responsible for validating / constructing the PDU from the ASN.1 type received.
+     * Retrieve the message object from the message. Allow for special construction / validation if needed.
      *
-     * @param AbstractType $asn1
+     * @param Message $message
      * @param int|null $id
      * @return mixed
      */
-    protected function getPdu(AbstractType $asn1, ?int $id = null)
+    protected function constructMessage(Message $message, ?int $id = null)
     {
-        if ($this->pduClass === null) {
-            throw new \RuntimeException('You must either define a PDU class or override getPdu().');
-        }
-
-        return call_user_func($this->pduClass.'::'.'fromAsn1', $asn1);
+        return $message->getMessage();
     }
 }
