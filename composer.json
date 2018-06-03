@@ -16,7 +16,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "cymapgt/asn1": "^0.1.0"
+    "cymapgt/asn1": "^0.2.1"
   },
   "require-dev": {
     "phpspec/phpspec": "^4.0"

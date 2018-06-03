@@ -56,7 +56,7 @@ class SocketPool
      * @return Socket
      * @throws ConnectionException
      */
-    public function connect(?string $server = null) : Socket
+    public function connect(string $server = null) : Socket
     {
         if ($server) {
             $servers = [$server];

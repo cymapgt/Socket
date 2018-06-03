@@ -42,4 +42,8 @@ class SocketServerSpec extends ObjectBehavior
     {
         $this->accept(0)->shouldBeNull();
     }
+    
+    function it_should_close_socket_connection_if_idle_for_30_seconds() {
+        $this->closeConnectionWhenIdle();
+    }
 }
