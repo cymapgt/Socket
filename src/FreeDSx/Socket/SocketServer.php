@@ -82,7 +82,7 @@ class SocketServer extends Socket
      * @param int $timeout
      * @return null|Socket
      */
-    public function accept($timeout = -1) : Socket
+    public function accept($timeout = -1)
     {
         $socket = @stream_socket_accept($this->socket, $timeout);
         if ($socket) {

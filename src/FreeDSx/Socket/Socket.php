@@ -324,7 +324,7 @@ class Socket
     /**
      * Sets options on the stream that must be done after it is a resource.
      */
-    protected function setStreamOpts() : void
+    protected function setStreamOpts()
     {
         stream_set_timeout($this->socket, $this->options['timeout_read']);
     }
