@@ -15,11 +15,16 @@
     }
   ],
   "require": {
-    "php": ">=7.0"
+<<<<<<< HEAD
+    "php": ">=7.0",
+    "cymapgt/asn1": "^0.1.0"
+=======
+    "php": ">=7.1"
+>>>>>>> b6ea5e1d069a4f4e9f4f804bb95179d92f2af5e9
   },
   "require-dev": {
     "phpspec/phpspec": "^4.0",
-    "cymapgt/asn1": "^0.2.1"
+    "freedsx/asn1": "^0.1.0"
   },
   "suggest": {
     "ext-openssl": "For SSL/TLS support.",
