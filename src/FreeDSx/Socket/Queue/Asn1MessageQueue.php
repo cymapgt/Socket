@@ -38,7 +38,7 @@ class Asn1MessageQueue extends MessageQueue
      * @param EncoderInterface $encoder
      * @param null|string $pduClass
      */
-    public function __construct(Socket $socket, EncoderInterface $encoder, ?string $pduClass = null)
+    public function __construct(Socket $socket, EncoderInterface $encoder, string $pduClass = null)
     {
         if ($pduClass !== null && !is_subclass_of($pduClass, PduInterface::class)) {
             throw new \RuntimeException(sprintf(
@@ -70,7 +70,7 @@ class Asn1MessageQueue extends MessageQueue
     /**
      * {@inheritdoc}
      */
-    protected function constructMessage(Message $message, ?int $id = null)
+    protected function constructMessage(Message $message, int $id = null)
     {
         if ($this->pduClass === null) {
             throw new \RuntimeException('You must either define a PDU class or override getPdu().');

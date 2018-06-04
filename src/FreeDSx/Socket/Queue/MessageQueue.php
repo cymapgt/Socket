@@ -44,7 +44,7 @@ abstract class MessageQueue
      * @return \Generator
      * @throws ConnectionException
      */
-    public function getMessages(?int $id = null)
+    public function getMessages(int $id = null)
     {
         $this->buffer = ($this->buffer !== false) ? $this->buffer : $this->socket->read();
 
@@ -93,7 +93,7 @@ abstract class MessageQueue
      * @return mixed
      * @throws ConnectionException
      */
-    public function getMessage(?int $id = null)
+    public function getMessage(int $id = null)
     {
         return $this->getMessages($id)->current();
     }
@@ -105,7 +105,7 @@ abstract class MessageQueue
      * @param int|null $id
      * @return mixed
      */
-    protected function constructMessage(Message $message, ?int $id = null)
+    protected function constructMessage(Message $message, int $id = null)
     {
         return $message->getMessage();
     }

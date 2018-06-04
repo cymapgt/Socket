@@ -48,7 +48,7 @@ class MessageQueue
      * @param EncoderInterface $encoder
      * @param null|string $pduClass
      */
-    public function __construct(Socket $socket, EncoderInterface $encoder, ?string $pduClass = null)
+    public function __construct(Socket $socket, EncoderInterface $encoder, string $pduClass = null)
     {
         $this->socket = $socket;
         $this->encoder = $encoder;
@@ -70,7 +70,7 @@ class MessageQueue
      * @throws ConnectionException
      * @throws \FreeDSx\Asn1\Exception\EncoderException
      */
-    public function getMessages(?int $id = null)
+    public function getMessages(int $id = null)
     {
         $this->buffer = ($this->buffer !== false) ? $this->buffer : $this->socket->read();
 
@@ -110,7 +110,7 @@ class MessageQueue
      * @throws ConnectionException
      * @throws EncoderException
      */
-    public function getMessage(?int $id = null)
+    public function getMessage(int $id = null)
     {
         return $this->getMessages($id)->current();
     }
@@ -122,7 +122,7 @@ class MessageQueue
      * @param int|null $id
      * @return mixed
      */
-    protected function getPdu(AbstractType $asn1, ?int $id = null)
+    protected function getPdu(AbstractType $asn1, int $id = null)
     {
         if ($this->pduClass === null) {
             throw new \RuntimeException('You must either define a PDU class or override getPdu().');

@@ -22,7 +22,7 @@ class Socket
     /**
      * Supported transport types.
      */
-    public const TRANSPORTS = [
+    const TRANSPORTS = [
         'tcp',
         'udp',
     ];
